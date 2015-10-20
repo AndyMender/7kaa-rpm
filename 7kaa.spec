@@ -2,7 +2,7 @@
 %global icon_dest_dir %{_datadir}/icons/hicolor/32x32/apps
 Name:     7kaa           
 Version:  2.14.5 
-Release:  8%{?dist}
+Release:  9%{?dist}
 Summary:  Seven Kingdoms: Ancient Adversaries
 
 License:  GPLv3+ and GPLv2+
