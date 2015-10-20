@@ -128,7 +128,10 @@ if [ -x /usr/bin/gtk-update-icon-cache ];then
 fi
 
 %postun music
-rm -fr %{prj_music_dir}
+if [ $1 -eq 0 ] ; then
+## When Uninstall
+    rm -fr %{prj_music_dir}
+fi
 
 %files
 %doc README
@@ -148,6 +151,9 @@ rm -fr %{prj_music_dir}
 %dir %{_docdir}/%{name}-music
 
 %changelog
+* Tue Oct 20 2015 Ding-Yi Chen <dchen@redhat.com> 2.14.5-9
+- music won't get uninstall when upgrading.
+
 * Fri Jun 26 2015 Ding-Yi Chen <dchen@redhat.com> 2.14.5-8
 - Use name macro whenever possible.
 
