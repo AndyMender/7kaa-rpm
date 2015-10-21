@@ -2,7 +2,7 @@
 %global icon_dest_dir %{_datadir}/icons/hicolor/32x32/apps
 Name:     7kaa           
 Version:  2.14.5 
-Release:  9%{?dist}
+Release:  10%{?dist}
 Summary:  Seven Kingdoms: Ancient Adversaries
 
 License:  GPLv3+ and GPLv2+
@@ -111,6 +111,8 @@ END
 install -m 755 %{data_installer} %{buildroot}%{_bindir}/%{data_installer}
 install -m 644 %{SOURCE1} %{buildroot}%{prj_music_dir}
 
+rm -f %{buildroot}%{_docdir}/%{name}/COPYING
+
 %post data
 /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 
@@ -151,8 +153,9 @@ fi
 %dir %{_docdir}/%{name}-music
 
 %changelog
-* Tue Oct 20 2015 Ding-Yi Chen <dchen@redhat.com> 2.14.5-9
+* Tue Oct 20 2015 Ding-Yi Chen <dchen@redhat.com> 2.14.5-10
 - music won't get uninstall when upgrading.
+- Remove /usr/share/doc/COPYING as it is already installed.
 
 * Fri Jun 26 2015 Ding-Yi Chen <dchen@redhat.com> 2.14.5-8
 - Use name macro whenever possible.
