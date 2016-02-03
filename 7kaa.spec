@@ -2,7 +2,7 @@
 %global icon_dest_dir %{_datadir}/icons/hicolor/32x32/apps
 Name:     7kaa           
 Version:  2.14.5 
-Release:  10%{?dist}
+Release:  11%{?dist}
 Summary:  Seven Kingdoms: Ancient Adversaries
 
 License:  GPLv3+ and GPLv2+
@@ -153,6 +153,9 @@ fi
 %dir %{_docdir}/%{name}-music
 
 %changelog
+* Wed Feb 03 2016 Fedora Release Engineering <releng@fedoraproject.org> - 2.14.5-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
 * Tue Oct 20 2015 Ding-Yi Chen <dchen@redhat.com> 2.14.5-10
 - music won't get uninstall when upgrading.
 - Remove /usr/share/doc/COPYING as it is already installed.
