@@ -2,7 +2,7 @@
 %global icon_dest_dir %{_datadir}/icons/hicolor/32x32/apps
 Name:     7kaa           
 Version:  2.14.5 
-Release:  11%{?dist}
+Release:  12%{?dist}
 Summary:  Seven Kingdoms: Ancient Adversaries
 
 License:  GPLv3+ and GPLv2+
@@ -58,6 +58,8 @@ Due to license issue, you need to run 7kaa-data-installer install the music.
 %patch0 -p0 -b .formatSecurity
 
 %build
+# https://bugzilla.redhat.com/show_bug.cgi?id=1306226
+export CXXFLAGS="%{optflags} -fsigned-char"
 %configure
 make %{?_smp_mflags}
 convert data/image/7k_icon.bmp %{icon_file}
@@ -153,6 +155,9 @@ fi
 %dir %{_docdir}/%{name}-music
 
 %changelog
+* Mon Mar 07 2016 Yaakov Selkowitz <yselkowi@redhat.com> - 2.14.5-12
+- Build with -fsigned-char to fix FTBFS with GCC 6 (#1306226)
+
 * Wed Feb 03 2016 Fedora Release Engineering <releng@fedoraproject.org> - 2.14.5-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
