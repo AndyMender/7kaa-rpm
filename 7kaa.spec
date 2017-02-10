@@ -2,7 +2,7 @@
 %global icon_dest_dir %{_datadir}/icons/hicolor/32x32/apps
 Name:     7kaa           
 Version:  2.14.5 
-Release:  12%{?dist}
+Release:  13%{?dist}
 Summary:  Seven Kingdoms: Ancient Adversaries
 
 License:  GPLv3+ and GPLv2+
@@ -155,6 +155,9 @@ fi
 %dir %{_docdir}/%{name}-music
 
 %changelog
+* Fri Feb 10 2017 Fedora Release Engineering <releng@fedoraproject.org> - 2.14.5-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
 * Mon Mar 07 2016 Yaakov Selkowitz <yselkowi@redhat.com> - 2.14.5-12
 - Build with -fsigned-char to fix FTBFS with GCC 6 (#1306226)
 
