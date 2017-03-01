@@ -1,15 +1,14 @@
 %global icon_file 7kaa_icon.png
 %global icon_dest_dir %{_datadir}/icons/hicolor/32x32/apps
-Name:     7kaa           
-Version:  2.14.5 
-Release:  13%{?dist}
+Name:     7kaa
+Version:  2.14.6
+Release:  1%{?dist}
 Summary:  Seven Kingdoms: Ancient Adversaries
 
 License:  GPLv3+ and GPLv2+
-URL:      http://7kfans.com/           
+URL:      http://7kfans.com/
 Source0:  http://sourceforge.net/projects/skfans/files/%{name}-%{version}.tar.xz
 Source1:  %{name}.autodlrc
-Patch0:   http://sf.net/p/skfans/bugs/4/attachment/%{name}-formatSecurity.patch
 
 BuildRequires: SDL2-devel, SDL2_net-devel
 BuildRequires: enet-devel
@@ -24,12 +23,12 @@ Seven Kingdoms is a real-time strategy (RTS) computer game developed
 by Trevor Chan of Enlight Software. The game enables players to
 compete against up to six other kingdoms allowing players to conquer
 opponents by defeating them in war (with troops or machines),
-capturing their buildings with spies, or offering opponents money 
+capturing their buildings with spies, or offering opponents money
 for their kingdom.
 
 Seven Kingdoms: Ancient Adversaries is a free patch provided by
 Interactive Magic and added three new cultures, the Egyptians, the
-Mughals and the Zulus, and a new war machine, Unicorn. 
+Mughals and the Zulus, and a new war machine, Unicorn.
 
 %package data
 BuildArch: noarch
@@ -55,7 +54,6 @@ Due to license issue, you need to run 7kaa-data-installer install the music.
 
 %prep
 %setup -q
-%patch0 -p0 -b .formatSecurity
 
 %build
 # https://bugzilla.redhat.com/show_bug.cgi?id=1306226
@@ -155,6 +153,9 @@ fi
 %dir %{_docdir}/%{name}-music
 
 %changelog
+* Wed Mar 01 2017 Ding-Yi Chen <dchen@redhat.com> 2.14.6-1
+- Upstream update to 2.14.6
+
 * Fri Feb 10 2017 Fedora Release Engineering <releng@fedoraproject.org> - 2.14.5-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
