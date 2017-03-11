@@ -2,7 +2,7 @@
 %global icon_dest_dir %{_datadir}/icons/hicolor/32x32/apps
 Name:     7kaa
 Version:  2.14.6
-Release:  1%{?dist}
+Release:  2%{?dist}
 Summary:  Seven Kingdoms: Ancient Adversaries
 
 License:  GPLv3+ and GPLv2+
@@ -153,6 +153,9 @@ fi
 %dir %{_docdir}/%{name}-music
 
 %changelog
+* Sat Mar 11 2017 Raphael Groner <projects.rg@smart.ms> - 2.14.6-2
+- rebuilt due to branching
+
 * Wed Mar 01 2017 Ding-Yi Chen <dchen@redhat.com> 2.14.6-1
 - Upstream update to 2.14.6
 
