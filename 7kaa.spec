@@ -1,8 +1,8 @@
 %global icon_file 7kaa_icon.png
 %global icon_dest_dir %{_datadir}/icons/hicolor/32x32/apps
 Name:     7kaa
-Version:  2.14.6
-Release:  4%{?dist}
+Version:  2.14.7
+Release:  1%{?dist}
 Summary:  Seven Kingdoms: Ancient Adversaries
 
 License:  GPLv3+ and GPLv2+
@@ -16,7 +16,10 @@ BuildRequires: openal-soft-devel, autoconf
 BuildRequires: gettext-devel
 BuildRequires: desktop-file-utils
 BuildRequires: ImageMagick
+BuildRequires: libcurl-devel
+
 Requires: %{name}-data = %{version}-%{release}
+Requires: libcurl
 
 %description
 Seven Kingdoms is a real-time strategy (RTS) computer game developed
@@ -153,6 +156,11 @@ fi
 %dir %{_docdir}/%{name}-music
 
 %changelog
+* Thu Dec 07 2017 Ding-Yi Chen <dchen@redhat.com> - 2.14.7-1
+- Upstream update to 2.14.7
+  Fixes Bug 1458610 - 7kaa-2.14.7 is available
+- Add Requires and BuildRequires libcurl
+
 * Wed Aug 02 2017 Fedora Release Engineering <releng@fedoraproject.org> - 2.14.6-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
 
