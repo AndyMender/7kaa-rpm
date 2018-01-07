@@ -2,7 +2,7 @@
 %global icon_dest_dir %{_datadir}/icons/hicolor/32x32/apps
 Name:     7kaa
 Version:  2.14.7
-Release:  1%{?dist}
+Release:  2%{?dist}
 Summary:  Seven Kingdoms: Ancient Adversaries
 
 License:  GPLv3+ and GPLv2+
@@ -116,22 +116,6 @@ install -m 644 %{SOURCE1} %{buildroot}%{prj_music_dir}
 
 rm -f %{buildroot}%{_docdir}/%{name}/COPYING
 
-%post data
-/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
-
-%postun data
-if [ $1 -eq 0 ] ; then
-    /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
-    if [ -x /usr/bin/gtk-update-icon-cache ];then
-        /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-    fi
-fi
-
-%posttrans data
-if [ -x /usr/bin/gtk-update-icon-cache ];then
-    /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-fi
-
 %postun music
 if [ $1 -eq 0 ] ; then
 ## When Uninstall
@@ -156,6 +140,9 @@ fi
 %dir %{_docdir}/%{name}-music
 
 %changelog
+* Sun Jan 07 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 2.14.7-2
+- Remove obsolete scriptlets
+
 * Thu Dec 07 2017 Ding-Yi Chen <dchen@redhat.com> - 2.14.7-1
 - Upstream update to 2.14.7
   Fixes Bug 1458610 - 7kaa-2.14.7 is available
