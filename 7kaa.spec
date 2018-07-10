@@ -10,6 +10,7 @@ URL:      http://7kfans.com/
 Source0:  http://sourceforge.net/projects/skfans/files/%{name}-%{version}.tar.xz
 Source1:  %{name}.autodlrc
 
+BuildRequires:  gcc-c++
 BuildRequires: SDL2-devel, SDL2_net-devel
 BuildRequires: enet-devel
 BuildRequires: openal-soft-devel, autoconf
