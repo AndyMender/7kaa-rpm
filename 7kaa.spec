@@ -2,7 +2,7 @@
 %global icon_dest_dir %{_datadir}/icons/hicolor/32x32/apps
 Name:     7kaa
 Version:  2.14.7
-Release:  3%{?dist}
+Release:  4%{?dist}
 Summary:  Seven Kingdoms: Ancient Adversaries
 
 License:  GPLv3+ and GPLv2+
@@ -141,6 +141,9 @@ fi
 %dir %{_docdir}/%{name}-music
 
 %changelog
+* Thu Jul 12 2018 Fedora Release Engineering <releng@fedoraproject.org> - 2.14.7-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
+
 * Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 2.14.7-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
