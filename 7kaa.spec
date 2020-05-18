@@ -1,13 +1,13 @@
 %global icon_file 7kaa_icon.png
 %global icon_dest_dir %{_datadir}/icons/hicolor/32x32/apps
 Name:     7kaa
-Version:  2.14.7
-Release:  6%{?dist}
+Version:  2.15.3
+Release:  1%{?dist}
 Summary:  Seven Kingdoms: Ancient Adversaries
 
 License:  GPLv3+ and GPLv2+
 URL:      http://7kfans.com/
-Source0:  http://sourceforge.net/projects/skfans/files/%{name}-%{version}.tar.xz
+Source0:  https://github.com/the3dfxdude/%{name}/archive/v%{version}.tar.gz
 Source1:  %{name}.autodlrc
 
 BuildRequires:  gcc-c++
@@ -18,9 +18,9 @@ BuildRequires: gettext-devel
 BuildRequires: desktop-file-utils
 BuildRequires: ImageMagick
 BuildRequires: libcurl-devel
+BuildRequires: automake
 
 Requires: %{name}-data = %{version}-%{release}
-Requires: libcurl
 
 %description
 Seven Kingdoms is a real-time strategy (RTS) computer game developed
@@ -54,7 +54,7 @@ Requires: autodownloader, sudo
 
 %description music
 In-Game music for Seven Kingdoms: Ancient Adversaries
-Due to license issue, you need to run 7kaa-data-installer install the music.
+Due to license issue, you need to run 7kaa-data-installer to install the music.
 
 %prep
 %setup -q
@@ -62,28 +62,29 @@ Due to license issue, you need to run 7kaa-data-installer install the music.
 %build
 # https://bugzilla.redhat.com/show_bug.cgi?id=1306226
 export CXXFLAGS="%{optflags} -fsigned-char"
+./autogen.sh
 %configure
 make %{?_smp_mflags}
-convert data/image/7k_icon.bmp %{icon_file}
-
+convert data/IMAGE/7K_ICON.BMP %{icon_file}
 
 %install
 %make_install
+%find_lang %{name}
 mkdir -p %{buildroot}%{icon_dest_dir}
 install -m 644 %{icon_file} %{buildroot}%{icon_dest_dir}
 
 ### == desktop file
-cat>%{name}.desktop<<END
+cat>%{name}.desktop<<EOF
 [Desktop Entry]
 Name=%{name}
 GenericName=Seven Kingdoms: Ancient Adversaries
 Comment=A real-time strategy (RTS) computer game
-Exec=/usr/bin/%{name}
+Exec=%{_bindir}/%{name}
 Icon=%{name}_icon
 Terminal=false
 Type=Application
 Categories=Game;StrategyGame
-END
+EOF
 
 desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{name}.desktop
 
@@ -91,10 +92,10 @@ desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{name}.desktop
 %global data_installer %{name}-data-installer
 %global prj_music_dir %{_datadir}/%{name}/music
 mkdir -p %{buildroot}%{prj_music_dir}
-mkdir -p %{buildroot}/usr/share/doc/%{name}-music
+mkdir -p %{buildroot}%{_docdir}/%{name}-music
 
 ### === Downloader
-cat >%{data_installer}<<END
+cat >%{data_installer}<<EOF
 #!/bin/bash
 echo "This program will download necessary data files."
 if [ -r %{prj_music_dir}/win.wav ];then
@@ -107,10 +108,10 @@ if ! /usr/share/autodl/AutoDL.py %{prj_music_dir}/%{name}.autodlrc; then
 fi
 cd /tmp/%{name}-music
 tar xjvf /tmp/%{name}-music/%{name}-music.tar.bz2
-sudo install -v -m 644 /tmp/%{name}-music/%{name}-music/music/* /usr/share/%{name}/music
-sudo install -v -m 644 /tmp/%{name}-music/%{name}-music/*.txt /usr/share/doc/%{name}-music
+sudo install -v -m 644 /tmp/%{name}-music/%{name}-music/music/* %{_datadir}/%{name}/music
+sudo install -v -m 644 /tmp/%{name}-music/%{name}-music/*.txt %{_docdir}/%{name}-music
 echo "Done"
-END
+EOF
 
 install -m 755 %{data_installer} %{buildroot}%{_bindir}/%{data_installer}
 install -m 644 %{SOURCE1} %{buildroot}%{prj_music_dir}
@@ -123,7 +124,7 @@ if [ $1 -eq 0 ] ; then
     rm -fr %{prj_music_dir}
 fi
 
-%files
+%files -f %{name}.lang
 %doc README
 %license COPYING
 %{_bindir}/%{name}
@@ -141,6 +142,9 @@ fi
 %dir %{_docdir}/%{name}-music
 
 %changelog
+* Sun May 17 2020 Andy Mender <andymenderunix@fedoraproject.org> - 2.15.3-1
+- Try to unorphan and update the package
+
 * Wed Jul 24 2019 Fedora Release Engineering <releng@fedoraproject.org> - 2.14.7-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
