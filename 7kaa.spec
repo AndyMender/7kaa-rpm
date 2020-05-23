@@ -1,26 +1,28 @@
-%global icon_file 7kaa_icon.png
 %global icon_dest_dir %{_datadir}/icons/hicolor/32x32/apps
+%global music_installer %{name}-music-installer
+%global prj_music_dir %{_datadir}/%{name}/music
 Name:     7kaa
 Version:  2.15.3
-Release:  1%{?dist}
+Release:  2%{?dist}
 Summary:  Seven Kingdoms: Ancient Adversaries
 
 License:  GPLv3+ and GPLv2+
 URL:      http://7kfans.com/
 Source0:  https://github.com/the3dfxdude/%{name}/archive/v%{version}.tar.gz
-Source1:  %{name}.autodlrc
 
-BuildRequires:  gcc-c++
-BuildRequires: SDL2-devel, SDL2_net-devel
-BuildRequires: enet-devel
-BuildRequires: openal-soft-devel, autoconf
-BuildRequires: gettext-devel
-BuildRequires: desktop-file-utils
-BuildRequires: ImageMagick
-BuildRequires: libcurl-devel
+BuildRequires: autoconf
 BuildRequires: automake
+BuildRequires: desktop-file-utils
+BuildRequires: enet-devel
+BuildRequires: gcc-c++
+BuildRequires: gettext-devel
+BuildRequires: libcurl-devel
+BuildRequires: openal-soft-devel
+BuildRequires: SDL2-devel
+BuildRequires: SDL2_net-devel
 
-Requires: %{name}-data = %{version}-%{release}
+Requires: hicolor-icon-theme
+Requires: %{name}-music = %{version}-%{release}
 
 %description
 Seven Kingdoms is a real-time strategy (RTS) computer game developed
@@ -34,27 +36,17 @@ Seven Kingdoms: Ancient Adversaries is a free patch provided by
 Interactive Magic and added three new cultures, the Egyptians, the
 Mughals and the Zulus, and a new war machine, Unicorn.
 
-%package data
-BuildArch: noarch
-Summary: In-Game data Seven Kingdoms: Ancient Adversaries
-
-Requires: %{name} = %{version}-%{release}
-Requires: hicolor-icon-theme
-
-%description data
-In-Game music data Seven Kingdoms: Ancient Adversaries
-
 %package music
+Summary: In-Game music for Seven Kingdoms: Ancient Adversaries
 License: Redistributable, no modification permitted
 BuildArch: noarch
-Summary: In-Game music for Seven Kingdoms: Ancient Adversaries
 
-Requires: %{name}-data = %{version}-%{release}
-Requires: autodownloader, sudo
+Requires: %{name} = %{version}-%{release}
+Requires: wget
 
 %description music
-In-Game music for Seven Kingdoms: Ancient Adversaries
-Due to license issue, you need to run 7kaa-data-installer to install the music.
+In-Game music for Seven Kingdoms: Ancient Adversaries.
+Due to licensing, you need to run 7kaa-data-installer to install the music.
 
 %prep
 %setup -q
@@ -65,16 +57,21 @@ export CXXFLAGS="%{optflags} -fsigned-char"
 ./autogen.sh
 %configure
 make %{?_smp_mflags}
-convert data/IMAGE/7K_ICON.BMP %{icon_file}
 
 %install
 %make_install
 %find_lang %{name}
+
+### == icon files
 mkdir -p %{buildroot}%{icon_dest_dir}
-install -m 644 %{icon_file} %{buildroot}%{icon_dest_dir}
+install -m 644 doc/7kicon.png %{buildroot}%{icon_dest_dir}
+
+### == music directories
+mkdir -p %{buildroot}%{prj_music_dir}
+mkdir -p %{buildroot}%{_docdir}/%{name}-music
 
 ### == desktop file
-cat>%{name}.desktop<<EOF
+cat > %{name}.desktop << EOF
 [Desktop Entry]
 Name=%{name}
 GenericName=Seven Kingdoms: Ancient Adversaries
@@ -88,60 +85,55 @@ EOF
 
 desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{name}.desktop
 
-### == music autodownload
-%global data_installer %{name}-data-installer
-%global prj_music_dir %{_datadir}/%{name}/music
-mkdir -p %{buildroot}%{prj_music_dir}
-mkdir -p %{buildroot}%{_docdir}/%{name}-music
-
-### === Downloader
-cat >%{data_installer}<<EOF
+### == music downloader script
+cat > %{music_installer} << EOF
 #!/bin/bash
-echo "This program will download necessary data files."
-if [ -r %{prj_music_dir}/win.wav ];then
-   echo "music already downloaded" > /dev/stderr
+echo "This program will download missing music files."
+
+if [ -r %{prj_music_dir}/win.wav ]; then
+   echo "Music already downloaded." > /dev/stderr
    exit 2
 fi
-if ! /usr/share/autodl/AutoDL.py %{prj_music_dir}/%{name}.autodlrc; then
-    echo "Error on music download" > /dev/stderr
+
+MUSIC_TMP_DIR=`mktemp -p /var/tmp -d %{name}-music.XXX`
+cd $MUSIC_TMP_DIR
+wget %{URL}/downloads/%{name}-music-2.15.tar.bz2
+
+if [ ! -f %{name}-music-2.15.tar.bz2 ]; then
+    echo "Couldn't download music archive."
     exit 3
 fi
-cd /tmp/%{name}-music
-tar xjvf /tmp/%{name}-music/%{name}-music.tar.bz2
-sudo install -v -m 644 /tmp/%{name}-music/%{name}-music/music/* %{_datadir}/%{name}/music
-sudo install -v -m 644 /tmp/%{name}-music/%{name}-music/*.txt %{_docdir}/%{name}-music
-echo "Done"
+
+tar xjvf %{name}-music-2.15.tar.bz2
+
+install -v -m 644 %{name}-music/MUSIC/* %{prj_music_dir}
+install -v -m 644 %{name}-music/*.txt %{_docdir}/%{name}-music
+
+echo "Music installed successfully."
 EOF
 
-install -m 755 %{data_installer} %{buildroot}%{_bindir}/%{data_installer}
-install -m 644 %{SOURCE1} %{buildroot}%{prj_music_dir}
+install -m 755 %{music_installer} %{buildroot}%{_bindir}/%{music_installer}
 
+### == remove misplaced license file
 rm -f %{buildroot}%{_docdir}/%{name}/COPYING
-
-%postun music
-if [ $1 -eq 0 ] ; then
-## When Uninstall
-    rm -fr %{prj_music_dir}
-fi
 
 %files -f %{name}.lang
 %doc README
 %license COPYING
+%{_datadir}/%{name}/[^m]*
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
-
-%files data
-%dir %{_datadir}/%{name}
-%{_datadir}/%{name}/[^m]*
-%{icon_dest_dir}/%{icon_file}
+%{icon_dest_dir}/7kicon.png
 
 %files music
-%{_bindir}/%{data_installer}
+%{_bindir}/%{music_installer}
 %dir %{prj_music_dir}
-%{prj_music_dir}/%{name}.autodlrc
 %dir %{_docdir}/%{name}-music
 
 %changelog
+* Sat May 23 2020 Andy Mender <andymenderunix@fedoraproject.org> - 2.15.3-2
+- Clean up and improve spec file
+
 * Sun May 17 2020 Andy Mender <andymenderunix@fedoraproject.org> - 2.15.3-1
 - Try to unorphan and update the package
 
