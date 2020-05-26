@@ -1,9 +1,7 @@
 %global icon_dest_dir %{_datadir}/icons/hicolor/32x32/apps
-%global music_installer %{name}-music-installer
-%global prj_music_dir %{_datadir}/%{name}/music
 Name:     7kaa
 Version:  2.15.3
-Release:  2%{?dist}
+Release:  3%{?dist}
 Summary:  Seven Kingdoms: Ancient Adversaries
 
 License:  GPLv3+ and GPLv2+
@@ -22,7 +20,6 @@ BuildRequires: SDL2-devel
 BuildRequires: SDL2_net-devel
 
 Requires: hicolor-icon-theme
-Requires: %{name}-music = %{version}-%{release}
 
 %description
 Seven Kingdoms is a real-time strategy (RTS) computer game developed
@@ -36,17 +33,8 @@ Seven Kingdoms: Ancient Adversaries is a free patch provided by
 Interactive Magic and added three new cultures, the Egyptians, the
 Mughals and the Zulus, and a new war machine, Unicorn.
 
-%package music
-Summary: In-Game music for Seven Kingdoms: Ancient Adversaries
-License: Redistributable, no modification permitted
-BuildArch: noarch
-
-Requires: %{name} = %{version}-%{release}
-Requires: wget
-
-%description music
-In-Game music for Seven Kingdoms: Ancient Adversaries.
-Due to licensing, you need to run 7kaa-data-installer to install the music.
+Due to licensing, in-game music was moved to RPM Fusion as the 7kaa-music 
+non-free package.
 
 %prep
 %setup -q
@@ -66,10 +54,6 @@ make %{?_smp_mflags}
 mkdir -p %{buildroot}%{icon_dest_dir}
 install -m 644 doc/7kicon.png %{buildroot}%{icon_dest_dir}
 
-### == music directories
-mkdir -p %{buildroot}%{prj_music_dir}
-mkdir -p %{buildroot}%{_docdir}/%{name}-music
-
 ### == desktop file
 cat > %{name}.desktop << EOF
 [Desktop Entry]
@@ -85,52 +69,20 @@ EOF
 
 desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{name}.desktop
 
-### == music downloader script
-cat > %{music_installer} << EOF
-#!/bin/bash
-echo "This program will download missing music files."
-
-if [ -r %{prj_music_dir}/win.wav ]; then
-   echo "Music already downloaded." > /dev/stderr
-   exit 2
-fi
-
-MUSIC_TMP_DIR=`mktemp -p /var/tmp -d %{name}-music.XXX`
-cd $MUSIC_TMP_DIR
-wget %{URL}/downloads/%{name}-music-2.15.tar.bz2
-
-if [ ! -f %{name}-music-2.15.tar.bz2 ]; then
-    echo "Couldn't download music archive."
-    exit 3
-fi
-
-tar xjvf %{name}-music-2.15.tar.bz2
-
-install -v -m 644 %{name}-music/MUSIC/* %{prj_music_dir}
-install -v -m 644 %{name}-music/*.txt %{_docdir}/%{name}-music
-
-echo "Music installed successfully."
-EOF
-
-install -m 755 %{music_installer} %{buildroot}%{_bindir}/%{music_installer}
-
 ### == remove misplaced license file
 rm -f %{buildroot}%{_docdir}/%{name}/COPYING
 
 %files -f %{name}.lang
 %doc README
 %license COPYING
-%{_datadir}/%{name}/[^m]*
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{icon_dest_dir}/7kicon.png
 
-%files music
-%{_bindir}/%{music_installer}
-%dir %{prj_music_dir}
-%dir %{_docdir}/%{name}-music
-
 %changelog
+* Tue May 26 2020 Andy Mender <andymenderunix@fedoraproject.org> - 2.15.3-3
+- Split off music installation from main 7kaa package
+
 * Sat May 23 2020 Andy Mender <andymenderunix@fedoraproject.org> - 2.15.3-2
 - Clean up and improve spec file
 
