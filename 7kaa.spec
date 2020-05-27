@@ -1,7 +1,7 @@
 %global icon_dest_dir %{_datadir}/icons/hicolor/32x32/apps
 Name:     7kaa
 Version:  2.15.3
-Release:  3%{?dist}
+Release:  4%{?dist}
 Summary:  Seven Kingdoms: Ancient Adversaries
 
 License:  GPLv3+ and GPLv2+
@@ -33,9 +33,7 @@ Seven Kingdoms: Ancient Adversaries is a free patch provided by
 Interactive Magic and added three new cultures, the Egyptians, the
 Mughals and the Zulus, and a new war machine, Unicorn.
 
-Due to licensing, in-game music was moved to RPM Fusion as the 7kaa-music 
-non-free package.
-
+Due to licensing, in-game music needs to be downloaded separately.
 %prep
 %setup -q
 
@@ -76,10 +74,14 @@ rm -f %{buildroot}%{_docdir}/%{name}/COPYING
 %doc README
 %license COPYING
 %{_bindir}/%{name}
+%{_datadir}/%{name}/*
 %{_datadir}/applications/%{name}.desktop
 %{icon_dest_dir}/7kicon.png
 
 %changelog
+* Wed May 27 2020 Andy Mender <andymenderunix@fedoraproject.org> - 2.15.3-4
+- Fix %files section, correct %description
+
 * Tue May 26 2020 Andy Mender <andymenderunix@fedoraproject.org> - 2.15.3-3
 - Split off music installation from main 7kaa package
 
