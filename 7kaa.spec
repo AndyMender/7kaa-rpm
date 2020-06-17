@@ -1,7 +1,7 @@
 %global icon_dest_dir %{_datadir}/icons/hicolor/32x32/apps
 Name:     7kaa
 Version:  2.15.3
-Release:  4%{?dist}
+Release:  5%{?dist}
 Summary:  Seven Kingdoms: Ancient Adversaries
 
 License:  GPLv3+ and GPLv2+
@@ -42,7 +42,7 @@ Due to licensing, in-game music needs to be downloaded separately.
 export CXXFLAGS="%{optflags} -fsigned-char"
 ./autogen.sh
 %configure
-make %{?_smp_mflags}
+%make_build
 
 %install
 %make_install
@@ -79,6 +79,9 @@ rm -f %{buildroot}%{_docdir}/%{name}/COPYING
 %{icon_dest_dir}/7kicon.png
 
 %changelog
+* Wed Jun 17 2020 Andy Mender <andymenderunix@fedoraproject.org> - 2.15.3-5
+- Use the make_build macro instead of legacy _smp_mflags
+
 * Wed May 27 2020 Andy Mender <andymenderunix@fedoraproject.org> - 2.15.3-4
 - Fix files section, correct description
 
