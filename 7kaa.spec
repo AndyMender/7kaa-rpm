@@ -80,7 +80,7 @@ rm -f %{buildroot}%{_docdir}/%{name}/COPYING
 
 %changelog
 * Wed May 27 2020 Andy Mender <andymenderunix@fedoraproject.org> - 2.15.3-4
-- Fix %files section, correct %description
+- Fix files section, correct description
 
 * Tue May 26 2020 Andy Mender <andymenderunix@fedoraproject.org> - 2.15.3-3
 - Split off music installation from main 7kaa package
