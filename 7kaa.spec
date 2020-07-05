@@ -1,12 +1,14 @@
 %global icon_dest_dir %{_datadir}/icons/hicolor/32x32/apps
 Name:     7kaa
-Version:  2.15.3
-Release:  5%{?dist}
+Version:  2.15.4
+Release:  1%{?dist}
 Summary:  Seven Kingdoms: Ancient Adversaries
 
-License:  GPLv3+ and GPLv2+
+# Main program: GPLv2+
+# misc_uuid: BSD
+License:  GPLv2+ and BSD
 URL:      http://7kfans.com/
-Source0:  https://github.com/the3dfxdude/%{name}/archive/v%{version}.tar.gz
+Source0:  https://github.com/the3dfxdude/%{name}/archive/v%{version}/%{name}-%{version}.tar.gz
 
 BuildRequires: autoconf
 BuildRequires: automake
@@ -19,6 +21,7 @@ BuildRequires: openal-soft-devel
 BuildRequires: SDL2-devel
 BuildRequires: SDL2_net-devel
 
+Requires: %{name}-data = %{version}-%{release}
 Requires: hicolor-icon-theme
 
 %description
@@ -34,6 +37,17 @@ Interactive Magic and added three new cultures, the Egyptians, the
 Mughals and the Zulus, and a new war machine, Unicorn.
 
 Due to licensing, in-game music needs to be downloaded separately.
+
+%package data
+BuildArch: noarch
+Summary: In-Game data Seven Kingdoms: Ancient Adversaries
+
+Requires: %{name} = %{version}-%{release}
+Requires: hicolor-icon-theme
+
+%description data
+In-Game data Seven Kingdoms: Ancient Adversaries.
+
 %prep
 %setup -q
 
@@ -45,7 +59,7 @@ export CXXFLAGS="%{optflags} -fsigned-char"
 %make_build
 
 %install
-%make_install
+%make_install -p
 %find_lang %{name}
 
 ### == icon files
@@ -74,11 +88,16 @@ rm -f %{buildroot}%{_docdir}/%{name}/COPYING
 %doc README
 %license COPYING
 %{_bindir}/%{name}
-%{_datadir}/%{name}/*
 %{_datadir}/applications/%{name}.desktop
 %{icon_dest_dir}/7kicon.png
 
+%files data
+%{_datadir}/%{name}/
+
 %changelog
+* Sun Jul 05 2020 Andy Mender <andymenderunix@fedoraproject.org> - 2.15.4-1
+- Bump version and improve spec file
+
 * Wed Jun 17 2020 Andy Mender <andymenderunix@fedoraproject.org> - 2.15.3-5
 - Use the make_build macro instead of legacy _smp_mflags
 
