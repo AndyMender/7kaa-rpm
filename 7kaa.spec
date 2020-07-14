@@ -1,6 +1,6 @@
 %global icon_dest_dir %{_datadir}/icons/hicolor/32x32/apps
 Name:     7kaa
-Version:  2.15.4
+Version:  2.15.4p1
 Release:  1%{?dist}
 Summary:  Seven Kingdoms: Ancient Adversaries
 
@@ -37,6 +37,7 @@ Interactive Magic and added three new cultures, the Egyptians, the
 Mughals and the Zulus, and a new war machine, Unicorn.
 
 Due to licensing, in-game music needs to be downloaded separately.
+Place the music files in /usr/share/7kaa/music.
 
 %package data
 BuildArch: noarch
@@ -95,6 +96,9 @@ rm -f %{buildroot}%{_docdir}/%{name}/COPYING
 %{_datadir}/%{name}/
 
 %changelog
+* Tue Jul 14 2020 Andy Mender <andymenderunix@fedoraproject.org> - 2.15.4p1-1
+- Bump version and add note about music files to description
+
 * Sun Jul 05 2020 Andy Mender <andymenderunix@fedoraproject.org> - 2.15.4-1
 - Bump version and improve spec file
 
